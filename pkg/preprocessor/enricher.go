@@ -12,6 +12,7 @@ func addResourceChangesInformation(nodeTable map[string]Node, tfjsonResourceChan
 	for _, tfjsonResourceChange := range tfjsonResourceChanges {
 		address := RootAddress + "." + tfjsonResourceChange.Address
 		node := nodeTable[address]
+		fmt.Println(node)
 		resource, ok := node.(*Resource)
 		if !ok {
 			err := fmt.Errorf("could not cast Node to Resource")

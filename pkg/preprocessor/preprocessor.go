@@ -42,18 +42,25 @@ func ParsePlanFile(planFile []byte, tfConfigUrl string, tfConfigMainPath string)
 
 	var rootModule *tfjson.StateModule
 	var state string
+
 	if isCurrentStatePresent {
 		rootModule = plan.PriorState.Values.RootModule
+		rootModule.Address = RootAddress
 		state = State_current
-	} else {
-		rootModule = plan.PlannedValues.RootModule
-		state = State_planned
+		nodeTable, err = parseTfjsonStateModule(rootModule, nodeTable, state, RootAddress)
+		if err != nil {
+			return nil, err
+		}
 	}
 
-	rootModule.Address = RootAddress
-	nodeTable, err = parseTfjsonStateModule(rootModule, nodeTable, state, RootAddress)
-	if err != nil {
-		return nil, err
+	if plan.PlannedValues != nil {
+		rootModule = plan.PlannedValues.RootModule
+		rootModule.Address = RootAddress
+		state = State_planned
+		nodeTable, err = parseTfjsonStateModule(rootModule, nodeTable, state, RootAddress)
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	if isCurrentStatePresent && (plan.ResourceChanges != nil) {
