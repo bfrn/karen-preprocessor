@@ -16,10 +16,10 @@ import (
 type Options struct {
 	InputType string
 
-	inputPath  string
-	outputPath string
-	url        string
-	filePath   string
+	InputPath  string
+	OutputPath string
+	Url        string
+	FilePath   string
 
 	args []string
 }
@@ -70,11 +70,11 @@ func (o *Options) Validate() error {
 
 	switch o.InputType {
 	case "plan":
-		if o.inputPath == "" || o.outputPath == "" || o.url == "" || o.filePath == "" {
+		if o.InputPath == "" || o.OutputPath == "" || o.Url == "" || o.FilePath == "" {
 			return errors.New("type 'plan' requires inputPath, outputPath, url and filePath")
 		}
 	case "state":
-		if o.inputPath == "" || o.outputPath == "" {
+		if o.InputPath == "" || o.OutputPath == "" {
 			return errors.New("type 'state' requires inputPath and outputPath")
 		}
 	}
@@ -85,8 +85,8 @@ func (o *Options) Validate() error {
 // Run executes parse command
 func (o *Options) Run() error {
 
-	log.Debug().Msgf("read file %s", o.inputPath)
-	data, err := os.ReadFile(o.inputPath)
+	log.Debug().Msgf("read file %s", o.InputPath)
+	data, err := os.ReadFile(o.InputPath)
 	if err != nil {
 		return err
 	}
@@ -95,8 +95,8 @@ func (o *Options) Run() error {
 
 	switch o.InputType {
 	case "plan":
-		log.Debug().Msgf("parse plan file url=%s filepath=%s", o.url, o.filePath)
-		parsedModel, err = preprocessor.ParsePlanFile(data, o.url, o.filePath)
+		log.Debug().Msgf("parse plan file url=%s filepath=%s", o.Url, o.FilePath)
+		parsedModel, err = preprocessor.ParsePlanFile(data, o.Url, o.FilePath)
 		if err != nil {
 			return err
 		}
@@ -113,8 +113,8 @@ func (o *Options) Run() error {
 		return err
 	}
 
-	log.Debug().Msgf("write file %s", o.outputPath)
-	err = os.WriteFile(o.outputPath, output, 0644)
+	log.Debug().Msgf("write file %s", o.OutputPath)
+	err = os.WriteFile(o.OutputPath, output, 0644)
 	if err != nil {
 		return err
 	}

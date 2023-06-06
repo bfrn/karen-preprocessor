@@ -1,0 +1,49 @@
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <script src="wasm_exec.js"></script>
+    <script>
+        const go = new Go();
+        WebAssembly.instantiateStreaming(fetch("main.wasm"), go.importObject).then((result) => {
+            go.run(result.instance);
+        });
+    </script>
+</head>
+<body><div>
+<div>
+    <input type="file" id="file"onchange="readText(event)" />
+    <pre id="file_content"></pre>
+    <input id="inputField" name="type" type="text">
+    <button onclick="parse()" name="submit">Upload File</button>
+    <div id="outputHash" style="font-size: 20px"></div>
+</div>
+<script>
+	
+    var inputField = document.querySelector('#inputField')
+    var outputHash = document.querySelector('#outputHash')
+    
+	
+	function parse(){
+        let utf8Encode = new TextEncoder();
+        let data = utf8Encode.encode(document.getElementById("file_content").innerText);
+        // let data = document.getElementById("file_content").innerText;
+        console.log(data)
+        
+		let dataJS = new TextDecoder().decode(wasmKarenPreprocessor(inputField.value, data));
+		console.log(JSON.stringify(dataJS))
+		document.getElementById("outputHash").innerText = dataJS
+    }
+
+    async function readText(event) {
+        const file = event.target.files.item(0)
+        const text = await file.text();
+        
+        document.getElementById("file_content").innerText = text
+        
+    }
+
+	
+    
+</script>
+</body>
+</html>
