@@ -45,9 +45,9 @@ func NewCmdParse() *cobra.Command {
 	cmd.Flags().StringVarP(&o.inputPath, "input", "i", o.inputPath, "relative path to input file.")
 	cmd.Flags().StringVarP(&o.outputPath, "output", "o", o.outputPath, "relative path to output location.")
 	// TODO: what kind of URL?
-	cmd.Flags().StringVar(&o.url, "url", o.url, "some kind of url")
+	cmd.Flags().StringVar(&o.url, "url", o.url, "url of the remote repository where the terraform files are located")
 	// TODO: what kind of filepath?
-	cmd.Flags().StringVar(&o.filePath, "filePath", o.filePath, "some kind of filepath")
+	cmd.Flags().StringVar(&o.filePath, "filePath", o.filePath, "relative path under which the terraform files are located in the remote repository")
 
 	cmd.MarkFlagRequired("type")
 
