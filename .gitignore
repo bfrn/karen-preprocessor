@@ -1,3 +1,4 @@
+bin/
 /output
 .vscode
 # Created by https://www.toptal.com/developers/gitignore/api/go,visualstudiocode,goland+all
