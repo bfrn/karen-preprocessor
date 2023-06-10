@@ -18,11 +18,11 @@ func NewApiServer(svc Service) *ApiServer {
 }
 
 func (s *ApiServer) Start(listenAddr string) error {
-	http.HandleFunc("/", CORS(s.handlePostStateFile))
+	http.HandleFunc("/parse", CORS(s.handlePostParseFile))
 	return http.ListenAndServe(listenAddr, nil)
 }
 
-func (s *ApiServer) handlePostStateFile(w http.ResponseWriter, r *http.Request) {
+func (s *ApiServer) handlePostParseFile(w http.ResponseWriter, r *http.Request) {
 
 	switch r.Method {
 	case "GET":
@@ -33,7 +33,13 @@ func (s *ApiServer) handlePostStateFile(w http.ResponseWriter, r *http.Request) 
 			writeJSON(w, http.StatusBadRequest, err)
 			return
 		}
-		parsedFile, err := s.svc.PostStateFile(body, context.Background())
+		var parseRequestData *ParseRequestData
+		err = json.Unmarshal(body, parseRequestData)
+		if err != nil {
+			writeJSON(w, http.StatusBadRequest, err)
+			return
+		}
+		parsedFile, err := s.svc.PostParseFile(parseRequestData, context.Background())
 		if err != nil {
 			writeJSON(w, http.StatusBadRequest, err)
 		} else {
