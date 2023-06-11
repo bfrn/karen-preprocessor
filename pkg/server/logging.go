@@ -26,7 +26,7 @@ func NewLoggingService(next Service) Service {
 	}
 }
 
-func (s *LoggingService) PostStateFile(stateFile []byte, ctx context.Context) (parsedFile []byte, err error) {
+func (s *LoggingService) PostParseFile(data []byte, ctx context.Context) (parsedFile []byte, err error) {
 	// defer is called when this function returns
 	// this defer enables the named values to be used
 	defer func() {
@@ -36,5 +36,5 @@ func (s *LoggingService) PostStateFile(stateFile []byte, ctx context.Context) (p
 			s.logger.Info().Msg("parsed state file")
 		}
 	}()
-	return s.next.PostStateFile(stateFile, ctx)
+	return s.next.PostParseFile(data, ctx)
 }
